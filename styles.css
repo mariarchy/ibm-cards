@@ -1,0 +1,527 @@
+/* IBM Punch Card — Learn how they work */
+
+:root {
+  --bg: #1a1a1e;
+  --card-bg: #e8dcc8;
+  --card-border: #9a8b72;
+  --hole: #0d0d0f;
+  --text: #eae8e4;
+  --muted: #8c8a86;
+  --accent: #78c4d4;
+  --zone: #b8860b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Mono", "SF Mono", "Consolas", monospace;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.25rem 0;
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 0.75rem 0;
+}
+
+section {
+  margin-bottom: 2.5rem;
+}
+
+.tool-section p,
+.card-section .hint,
+.decode-section p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.input-row label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+#text-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 4px;
+}
+
+#text-input::placeholder {
+  color: var(--muted);
+}
+
+.char-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.example-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(154, 139, 114, 0.3);
+}
+
+.example-section h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+}
+
+.example-section p,
+.example-section ul {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.example-layout {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.example-layout li {
+  margin-bottom: 0.25rem;
+}
+
+.example-layout code {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+.example-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(154, 139, 114, 0.3);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.example-card code {
+  color: var(--accent);
+}
+
+.btn-load {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-load:hover {
+  filter: brightness(1.1);
+}
+
+.card-container {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+.card {
+  display: inline-block;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 6px;
+  padding: 8px 10px 10px 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-row.labels {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 2px;
+  padding-left: 24px;
+}
+
+.label-cell {
+  width: 10px;
+  min-width: 10px;
+  font-size: 7px;
+  color: var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1px;
+}
+
+.label-cell.zone {
+  color: var(--zone);
+  font-weight: 600;
+}
+
+.card-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-right: 1px;
+}
+
+.column:last-child {
+  margin-right: 0;
+}
+
+.cell {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+  background: var(--card-bg);
+  border: 1px solid rgba(154, 139, 114, 0.4);
+  border-radius: 1px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.cell:hover {
+  background: #ddd4c4;
+}
+
+.cell.punched {
+  background: var(--hole);
+  border-color: var(--hole);
+}
+
+.cell.punched:hover {
+  background: #2a2a2e;
+}
+
+.decode-output {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.decode-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.decode-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.decode-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+#decode-char {
+  font-size: 1.5rem;
+  min-height: 1.5em;
+}
+
+.learn-content {
+  background: rgba(120, 196, 212, 0.08);
+  border: 1px solid rgba(120, 196, 212, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.learn-content ul {
+  margin: 0 0 1rem 0;
+  padding-left: 1.25rem;
+}
+
+.learn-content li {
+  margin-bottom: 0.5rem;
+}
+
+.learn-content li ul {
+  margin: 0.25rem 0 0 0;
+  padding-left: 1.25rem;
+}
+
+.learn-content .ref {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.learn-content .ref a {
+  color: var(--accent);
+}
+
+.learn-content .ref a:hover {
+  text-decoration: underline;
+}
+
+/* --- Tutorial --- */
+
+.tutorial-gate {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(120, 196, 212, 0.08);
+  border: 1px solid rgba(120, 196, 212, 0.25);
+  border-radius: 8px;
+}
+
+.tutorial-gate-text {
+  color: var(--text);
+  margin: 0 0 1rem 0;
+}
+
+.tutorial-gate-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tutorial-skip {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.tutorial-skip:hover {
+  color: var(--accent);
+}
+
+.tutorial-view {
+  margin-bottom: 2rem;
+}
+
+.tutorial-progress {
+  margin-bottom: 0.75rem;
+}
+
+.tutorial-step-num {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.tutorial-concept {
+  color: var(--text);
+  margin: 0 0 1rem 0;
+  max-width: 42rem;
+}
+
+.tutorial-column-wrap {
+  margin: 1rem 0;
+}
+
+.tutorial-single-card {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 6px;
+  padding: 10px 12px 12px 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-row-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 6px;
+  padding-top: 2px;
+}
+
+.tutorial-row-labels .label-cell {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin: 0;
+}
+
+.tutorial-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tutorial-cell {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  background: var(--card-bg);
+  border: 1px solid rgba(154, 139, 114, 0.4);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  padding: 0;
+}
+
+.tutorial-cell:hover:not(:disabled) {
+  background: #ddd4c4;
+}
+
+.tutorial-cell.punched {
+  background: var(--hole);
+  border-color: var(--hole);
+}
+
+.tutorial-cell:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.tutorial-task {
+  font-weight: 500;
+  color: var(--accent);
+  margin: 0.5rem 0 0.5rem 0;
+}
+
+.tutorial-decode-choices {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.btn-choice {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-choice:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-choice:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.tutorial-feedback {
+  min-height: 1.5em;
+  margin: 0.5rem 0 1rem 0;
+  font-size: 0.95rem;
+}
+
+.tutorial-feedback.success {
+  color: #7cb87c;
+}
+
+.tutorial-feedback.error {
+  color: #c47a7a;
+}
+
+.tutorial-nav {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-secondary {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.explore-view {
+  /* Wrapper for main tool + card + decode + learn */
+}

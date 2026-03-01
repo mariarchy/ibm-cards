@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM Punch Card — Learn how they work</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>IBM punch cards</h1>
+      <p class="tagline">See how 80 columns × 12 rows encode one character per column.</p>
+    </header>
+
+    <!-- Tutorial: gate (start/skip) -->
+    <section id="tutorial-gate" class="tutorial-gate">
+      <p class="tutorial-gate-text">Learn how each column encodes one character by punching holes in 12 rows.</p>
+      <div class="tutorial-gate-buttons">
+        <button type="button" id="tutorial-start" class="btn-primary">Start tutorial</button>
+        <a href="#" id="tutorial-skip" class="tutorial-skip">Skip to full card</a>
+      </div>
+    </section>
+
+    <!-- Tutorial: step-by-step view (single column, task, feedback, nav) -->
+    <section id="tutorial-view" class="tutorial-view" hidden>
+      <div class="tutorial-progress" aria-label="Tutorial progress">
+        <span id="tutorial-step-num" class="tutorial-step-num">Step 1 of 6</span>
+      </div>
+      <p id="tutorial-concept" class="tutorial-concept"></p>
+      <div id="tutorial-column-wrap" class="tutorial-column-wrap">
+        <div class="tutorial-single-card">
+          <div class="tutorial-row-labels">
+            <span class="label-cell zone">12</span>
+            <span class="label-cell zone">11</span>
+            <span class="label-cell zone">0</span>
+            <span class="label-cell">1</span>
+            <span class="label-cell">2</span>
+            <span class="label-cell">3</span>
+            <span class="label-cell">4</span>
+            <span class="label-cell">5</span>
+            <span class="label-cell">6</span>
+            <span class="label-cell">7</span>
+            <span class="label-cell">8</span>
+            <span class="label-cell">9</span>
+          </div>
+          <div id="tutorial-column" class="tutorial-column"></div>
+        </div>
+      </div>
+      <p id="tutorial-task" class="tutorial-task"></p>
+      <div id="tutorial-decode-choices" class="tutorial-decode-choices" hidden></div>
+      <p id="tutorial-feedback" class="tutorial-feedback" aria-live="polite"></p>
+      <div class="tutorial-nav">
+        <button type="button" id="tutorial-back" class="btn-secondary" disabled>Back</button>
+        <button type="button" id="tutorial-next" class="btn-primary">Next</button>
+      </div>
+    </section>
+
+    <div id="explore-view" class="explore-view" hidden>
+    <section class="tool-section">
+      <h2>Text → Card</h2>
+      <p>Type or paste text (up to 80 characters). The card updates as you type.</p>
+      <div class="input-row">
+        <label for="text-input">Your text</label>
+        <input type="text" id="text-input" maxlength="80" placeholder="e.g. HELLO WORLD" />
+        <span class="char-count"><span id="char-count">0</span>/80</span>
+      </div>
+      <div class="example-section">
+        <h3>Example from the punch-card era</h3>
+        <p>Programs were written one <strong>line per card</strong>. A typical card had:</p>
+        <ul class="example-layout">
+          <li><strong>Columns 1–5</strong> — Statement label (or <code>C</code> for comment)</li>
+          <li><strong>Column 6</strong> — Continuation (blank = new statement)</li>
+          <li><strong>Columns 7–72</strong> — Code (e.g. FORTRAN or COBOL)</li>
+          <li><strong>Columns 73–80</strong> — Sequence number so you could sort the deck if you dropped it</li>
+        </ul>
+        <p>Below is one real card from a FORTRAN “Hello, World” program. Load it to see the holes.</p>
+        <pre class="example-card" id="example-card-text"><code>C     HELLO WORLD - FORTRAN (one card)                                  HELLO001</code></pre>
+        <button type="button" id="load-example" class="btn-load">Load this card</button>
+      </div>
+    </section>
+
+    <section class="card-section">
+      <h2>The card</h2>
+      <div class="card-container">
+        <div class="card" id="card">
+          <div class="card-row labels row-labels">
+            <span class="label-cell"></span>
+            <span class="label-cell zone" data-row="12">12</span>
+            <span class="label-cell zone" data-row="11">11</span>
+            <span class="label-cell zone" data-row="0">0</span>
+            <span class="label-cell" data-row="1">1</span>
+            <span class="label-cell" data-row="2">2</span>
+            <span class="label-cell" data-row="3">3</span>
+            <span class="label-cell" data-row="4">4</span>
+            <span class="label-cell" data-row="5">5</span>
+            <span class="label-cell" data-row="6">6</span>
+            <span class="label-cell" data-row="7">7</span>
+            <span class="label-cell" data-row="8">8</span>
+            <span class="label-cell" data-row="9">9</span>
+          </div>
+          <div id="card-grid" class="card-grid"></div>
+        </div>
+      </div>
+      <p class="hint">Click a cell to punch or unpunched a hole. One column = one character.</p>
+    </section>
+
+    <section class="decode-section" id="decode-section">
+      <h2>Column → Character</h2>
+      <p>Punch holes in one column (or use the text box); the decoded character and punch code appear below.</p>
+      <div class="decode-output">
+        <div class="decode-item">
+          <span class="decode-label">Character</span>
+          <span id="decode-char" class="decode-value">—</span>
+        </div>
+        <div class="decode-item">
+          <span class="decode-label">Punch code (rows)</span>
+          <span id="decode-code" class="decode-value">—</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="learn-section">
+      <h2>How it works</h2>
+      <div class="learn-content">
+        <ul>
+          <li><strong>80 columns</strong> — One character per column, left to right.</li>
+          <li><strong>12 rows</strong> — Rows are labeled <strong>12, 11, 0, 1 … 9</strong>. Top three (12, 11, 0) are <em>zone</em> rows; 1–9 are <em>digit</em> rows.</li>
+          <li><strong>Encoding</strong> — A character is a unique combination of holes in that column:
+            <ul>
+              <li>No holes = space.</li>
+              <li>Digit <strong>0</strong> = hole in row 0; <strong>1</strong>–<strong>9</strong> = hole in row 1–9.</li>
+              <li><strong>A</strong>–<strong>I</strong> = zone 12 + digit 1–9 (e.g. A = 12+1, I = 12+9).</li>
+              <li><strong>J</strong>–<strong>R</strong> = zone 11 + digit 1–9 (e.g. J = 11+1).</li>
+              <li><strong>S</strong>–<strong>Z</strong> = zone 0 + digit 2–9 (e.g. S = 0+2, Z = 0+9).</li>
+              <li>Symbols use multiple punches (e.g. comma = 0-8-3).</li>
+            </ul>
+          </li>
+          <li><strong>History</strong> — 80-column cards (IBM, 1928) used rectangular holes for higher density. Often called “Hollerith” cards; used for data and code into the 1980s.</li>
+        </ul>
+        <p class="ref">Encoding follows the common BCD / IBM 029–style layout. Reference: <a href="https://homepage.cs.uiowa.edu/~dwjones/cards/codes.html" target="_blank" rel="noopener">Doug Jones, Punched Card Codes</a>.</p>
+      </div>
+    </section>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
