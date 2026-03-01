@@ -15,9 +15,3 @@ Open `index.html` in a browser (double-click or use your editor’s “Open with
 - **Card → Text** — Click any cell on the card to punch or unpunch a hole. The “Column → Character” section shows the decoded character and punch code (e.g. `12-1` for “A”).
 - **Example from the punch-card era** — Load a real FORTRAN “Hello, World” comment card to see how columns 1–5 (label), 7–72 (code), and 73–80 (sequence number) were used.
 - **How it works** — Short explanation of the 80×12 layout, zone vs digit rows, and how letters, digits, and symbols are encoded.
-
-## Design
-
-See [DESIGN.md](DESIGN.md) for goals, tutorial flow, and tech choices.
-
-Encoding follows the common BCD / IBM 029–style layout; reference: [Doug Jones, Punched Card Codes](https://homepage.cs.uiowa.edu/~dwjones/cards/codes.html).
